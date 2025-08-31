@@ -1,47 +1,55 @@
-# smartphone.py
-class Smartphone:
-    def __init__(self, brand, model, storage, battery):
+# Base class
+class Device:
+    def __init__(self, brand, battery=100):
         self.brand = brand
-        self.model = model
-        self.storage = storage
         self.battery = battery
-
-    def phone_info(self):
-        return f"{self.brand} {self.model} with {self.storage}GB storage and {self.battery}% battery."
 
     def charge(self, amount):
         self.battery = min(100, self.battery + amount)
-        return f"Battery charged to {self.battery}%."
+        print(f"{self.brand} charged to {self.battery}%")
 
-    def use(self, hours):
-        self.battery = max(0, self.battery - (hours * 10))
-        return f"After {hours} hour(s) of use, battery is at {self.battery}%."
+    def device_info(self):
+        print(f"Device: {self.brand}, Battery: {self.battery}%")
 
+# Subclass 1: Smartphone
+class Smartphone(Device):
+    def __init__(self, brand, model, battery=100):
+        super().__init__(brand, battery)
+        self.model = model
 
-class SmartphonePro(Smartphone):
-    def __init__(self, brand, model, storage, battery, camera_megapixels):
-        super().__init__(brand, model, storage, battery)
-        self.camera_megapixels = camera_megapixels
-
-    # polymorphism: override phone_info
     def phone_info(self):
-        return f"{self.brand} {self.model} Pro with {self.storage}GB storage, {self.camera_megapixels}MP camera, and {self.battery}% battery."
+        print(f"Smartphone: {self.brand} {self.model}, Battery: {self.battery}%")
 
     def take_photo(self):
         if self.battery > 5:
             self.battery -= 5
-            return f"Photo taken with {self.camera_megapixels}MP camera. Battery now at {self.battery}%."
+            print(f"{self.model} took a photo! Battery is now {self.battery}%")
         else:
-            return "Not enough battery to take a photo."
+            print("Battery too low to take photo!")
 
+# Subclass 2: Smartwatch
+class Smartwatch(Device):
+    def __init__(self, brand, battery=100):
+        super().__init__(brand, battery)
 
+    def track_steps(self, steps):
+        if self.battery > 2:
+            self.battery -= 2
+            print(f"{self.brand} tracked {steps} steps! Battery: {self.battery}%")
+        else:
+            print("Battery too low to track steps!")
+
+# Example usage
 if __name__ == "__main__":
-    # Example usage
-    phone1 = Smartphone("Samsung", "Galaxy S21", 128, 80)
-    print(phone1.phone_info())
-    print(phone1.use(3))
-    print(phone1.charge(15))
+    phone = Smartphone("Samsung", "Galaxy S21", 80)
+    watch = Smartwatch("Apple Watch", 50)
 
-    pro_phone = SmartphonePro("Apple", "iPhone 14", 256, 90, 48)
-    print(pro_phone.phone_info())
-    print(pro_phone.take_photo())
+    phone.phone_info()
+    phone.take_photo()
+    phone.charge(10)
+
+    print("---")
+
+    watch.device_info()
+    watch.track_steps(1200)
+    watch.charge(30)
